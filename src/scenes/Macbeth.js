@@ -1,6 +1,6 @@
-class Talking extends Phaser.Scene {
+class Macbeth extends Phaser.Scene {
     constructor() {
-        super("talkingScene");
+        super("macbethScene");
 
         // dialog constants
         this.DBOX_X = 0;			    // dialog box x-position
@@ -28,19 +28,25 @@ class Talking extends Phaser.Scene {
         this.nextText = null;			// player prompt text to continue typing
 
         // character variables
-        this.homer = null;
-        this.minerva = null;
-        this.neptune = null;
-        this.jove = null;
+        this.First_Witch = null;
+        this.Second_Witch = null;
+        this.Third_Witch = null;
         this.tweenDuration = 500;
 
         this.OFFSCREEN_X = -500;        // x,y values to place characters offscreen
         this.OFFSCREEN_Y = 1000;
     }
 
+    preload() {
+        this.load.json('macbeth', "./assets/json/macbeth.json");
+        this.load.image('firstWitch', "./assets/img/witch1.png");
+        this.load.image('secondWitch', "./assets/img/witch2.png");
+        this.load.image('thirdWitch', "./assets/img/witch3.png");
+    }
+
     create() {
         // parse dialog from JSON file
-        this.dialog = this.cache.json.get('dialog');
+        this.dialog = this.cache.json.get('macbeth');
         //console.log(this.dialog);
 
         // add dialog box sprite
@@ -51,10 +57,16 @@ class Talking extends Phaser.Scene {
         this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE);
 
         // ready the character dialog images offscreen
-        this.homer = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'homer').setOrigin(0, 1);
-        this.minerva = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'minerva').setOrigin(0, 1);
-        this.neptune = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'neptune').setOrigin(0, 1);
-        this.jove = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'jove').setOrigin(0, 1);
+        this.First_Witch = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'firstWitch').setOrigin(0, 1);
+        this.First_Witch.setScale(.4);
+        this.First_Witch.flipX = true;
+
+        this.Second_Witch = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'secondWitch').setOrigin(0, 1);
+        this.Second_Witch.setScale(0.5);
+        this.Second_Witch.flipX = true;
+
+        this.Third_Witch = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'thirdWitch').setOrigin(0, 1);
+        this.Third_Witch.setScale(.3);
 
         // input
         cursors = this.input.keyboard.createCursorKeys();
@@ -111,7 +123,6 @@ class Talking extends Phaser.Scene {
             }
             // make text box invisible
             this.dialogbox.visible = false;
-            this.scene.start("macbethScene");
 
         } else {
             // if not, set current speaker
@@ -134,6 +145,7 @@ class Talking extends Phaser.Scene {
                     duration: this.tweenDuration,
                     ease: 'Linear'
                 });
+            //    console.log(this.dialogSpeaker);
             }
 
             // build dialog (concatenate speaker + line of text)
